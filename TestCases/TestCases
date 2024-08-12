@@ -1,0 +1,297 @@
+  Scenario: Successfully retrieve a pet by valid existing ID
+
+    Given the user wants to get the information for a pet
+    When the user sends a valid request with an existing id
+    Then the user gets the id, category, name, photoUrls, tags and status
+
+  Scenario: Retrieve a pet with a non-existing ID
+
+    Given the user wants to get the information for a pet
+    When the user sends a valid request with a non existing id
+    Then the user gets "Pet not found" error message
+
+Scenario: Retrieve a pet with an invalid ID format
+
+    Given the user wants to get the information for a pet
+    When the user sends a valid request with a invalid id
+    Then the user gets a 404 error message
+
+Scenario: Successfully retrieve pets with status "available"
+   Given the user wants to find pets by status
+   When the user sends a valid request with the status "available"
+   Then the user gets a list of pets with status "available"
+
+  Scenario: Successfully retrieve pets with status "sold"
+    Given the user wants to find pets by status
+    When the user sends a valid request with the status "sold"
+    Then the user gets a list of pets with status "sold"
+
+  Scenario: Successfully retrieve pets with status "pending"
+    Given the user wants to find pets by status
+    When the user sends a valid request with the status "pending"
+    Then the user gets a list of pets with status "pending"
+
+  Scenario: Retrieve pets with an invalid status value
+    Given the user wants to find pets by status
+    When the user sends a valid request with an invalid status "unknown"
+    Then the user gets an empty list of pets
+    And the response status code should be 200
+
+  Scenario: Retrieve pets without providing a status value
+    Given the user wants to find pets by status
+    When the user sends a request without specifying a status
+    Then the user gets an empty list of pets
+    And the response status code should be 200
+
+  Scenario: Successfully add a new pet with all valid details
+    Given the user wants to add a new pet to the store
+    When the user sends a POST request to "/pet" with all the fields
+    Then the response status code should be 200
+    And the response body should contain the pet details
+    And newly generated id
+
+
+  Scenario: Add a new pet with an empty body
+    Given the user wants to add a new pet to the store
+    When the user sends a POST request to "/pet" with an empty body
+    Then the response status code should be 200
+    And the response body should contain the pet details with a newly generated id
+    And empty photoUrls list and empty tag list
+
+
+  Scenario: Add a new pet with missing name in tags object
+    Given the user wants to add a new pet to the store
+    When the user sends a POST request to "/pet" with missing name in tags object
+    Then the response status code should be 200
+    And the response body should contain the pet details with a tag object without name field
+    And newly generated id
+
+  Scenario: Add a new pet with missing id in tags object
+    Given the user wants to add a new pet to the store
+    When the user sends a POST request to "/pet" with missing id in tags object
+    Then the response status code should be 200
+    And the response body should contain the pet details
+    And newly generated id
+    And the id in tags object is the default one -- 0
+
+  Scenario: Add a new pet with missing id in category object
+    Given the user wants to add a new pet to the store
+    When the user sends a POST request to "/pet" with missing id in category object
+    Then the response status code should be 200
+    And the response body should contain the pet details
+    And newly generated id
+    And the id in category object is the default one -- 0
+
+
+  Scenario: Add a new pet with missing name in category object
+    Given the user wants to add a new pet to the store
+    When the user sends a POST request to "/pet" with missing name in category object
+    Then the response status code should be 200
+    And the response body should contain the pet details with a category object without name field
+    And newly generated id
+
+
+  Scenario: Upload an image with missing additional data
+    Given the user wants to uploads an image
+    When the user sends a POST request to "/pet" with an existing petId
+    And missing additionalMetadata and file to upload
+    The response should be 200 Ok
+    and the body response
+
+    {
+      "code": 0,
+      "type": "string",
+      "message": "string"
+    }
+
+
+  Scenario: Upload an image with all required fields additional data
+    Given the user wants to uploads an image
+    When the user sends a POST request to "/pet" with all required fields
+    The response should be 200 Ok
+    and the body response
+
+    {
+      "code": 0,
+      "type": "string",
+      "message": "string"
+    }
+
+  Scenario: Upload an image with all the fields
+
+    Given the user wants to uploads an image
+    When the user sends a POST request to "/pet" all the fields
+    The response should be 200 Ok
+    and the body response
+
+    {
+      "code": 0,
+      "type": "string",
+      "message": "string"
+    }
+
+  Scenario: Upload an image with a non existing petId
+    Given the user wants to uploads an image
+    When the user sends a POST request to "/pet" with a non existing petId
+    The response should be 200 Ok
+    and the body response
+    {
+      "code": 0,
+      "type": "string",
+      "message": "string"
+    }
+
+   Scenario: Upload an image with an invalid petId
+    Given the user wants to uploads an image
+    When the user sends a POST request to "/pet" with an invalid petId
+    The response should be 404 Not found
+
+Feature: Update an existing pet
+
+
+  Scenario: Successfully update a pet with all valid details
+    Given the user wants to update an existing pet
+    When the user sends a PUT request to "/pet" with the following details
+      | id                | category.id | category.name | name   | photoUrls | tags.id | tags.name | status    |
+      | 8966745555555555555 | 0           | string        | doggie | string    | 0       | string    | available |
+    Then the response status code should be 200
+    And the response body should contain the pet details
+    And the pet details should include the id, category, name, photoUrls, tags, and status
+
+  Scenario: Update pet with a non-existent ID
+    Given the user wants to update a pet with a non-existent ID
+    When the user sends a PUT request to "/pet" with the following details
+      | id                | category.id | category.name | name   | photoUrls | tags.id | tags.name | status    |
+      | 9999999999999999999 | 0           | string        | doggie | string    | 0       | string    | available |
+    Then the response status code should be 404
+    And the response body should contain an error message indicating that the pet was not found
+
+  Scenario: Update pet with a missing required field
+    Given the user wants to update a pet but with a missing required field
+    When the user sends a PUT request to "/pet" with the following details
+      | id                | category.id | category.name | photoUrls | tags.id | tags.name | status    |
+      | 8966745555555555555 | 0           | string        | string    | 0       | string    | available |
+    Then the response status code should be 400
+    And the response body should contain an error message indicating that the "name" field is required
+
+  Scenario: Update pet with an invalid ID
+    Given the user wants to update a pet with an invalid ID
+    When the user sends a PUT request to "/pet" with the following details
+      | id         | category.id | category.name | name   | photoUrls | tags.id | tags.name | status    |
+      | invalid_id | 0           | string        | doggie | string    | 0       | string    | available |
+    Then the response status code should be 400
+    And the response body should contain an error message indicating that the ID is invalid
+
+  Scenario: Update pet with an invalid status value
+    Given the user wants to update a pet with an invalid status value
+    When the user sends a PUT request to "/pet" with the following details
+      | id                | category.id | category.name | name   | photoUrls | tags.id | tags.name | status        |
+      | 8966745555555555555 | 0           | string        | doggie | string    | 0       | string    | invalid_status |
+    Then the response status code should be 400
+    And the response body should contain an error message indicating that the status value is invalid
+
+  Scenario: Update pet with empty photoUrls and tags
+    Given the user wants to update a pet with empty photoUrls and tags
+    When the user sends a PUT request to "/pet" with the following details
+      | id                | category.id | category.name | name   | photoUrls | tags | status    |
+      | 8966745555555555555 | 0           | string        | doggie | []        | []   | available |
+    Then the response status code should be 200
+    And the response body should contain the pet details with empty photoUrls and tags arrays
+    And the response body should include a valid id
+
+  Scenario: Update pet with missing category name
+    Given the user wants to update a pet with a missing category name
+    When the user sends a PUT request to "/pet" with the following details
+      | id                | category.id | name   | photoUrls | tags.id | tags.name | status    |
+      | 8966745555555555555 | 0           | doggie | string    | 0       | string    | available |
+    Then the response status code should be 200
+    And the response body should contain the pet details with the category object missing the name field
+    And the response body should include a valid id
+
+Feature: Update pet information using form data
+
+
+  Scenario: Successfully update pet with valid form data
+    Given the user wants to update the pet with ID 131439890
+    When the user sends a POST request to "/pet/131439890" with the following form-encoded data
+      | field   | value      |
+      | name    | test       |
+      | status  | available  |
+    Then the response status code should be 200
+    And the response body should contain the updated pet details
+    And the pet details should include the id, name, and status
+
+  Scenario: Update pet with missing required field
+    Given the user wants to update the pet with ID 131439890 but with a missing required field
+    When the user sends a POST request to "/pet/131439890" with the following form data
+      | field   | value      |
+      | status  | available  |
+    Then the response status code should be 400
+    And the response body should contain an error message indicating that the "name" field is required
+
+  Scenario: Update pet with invalid status value
+    Given the user wants to update the pet with ID 131439890 but with an invalid status value
+    When the user sends a POST request to "/pet/131439890" with the following form data
+      | field   | value         |
+      | name    | test          |
+      | status  | invalid_status |
+    Then the response status code should be 400
+    And the response body should contain an error message indicating that the status value is invalid
+
+  Scenario: Update pet with invalid ID format
+    Given the user wants to update the pet with an invalid ID format
+    When the user sends a POST request to "/pet/invalid_id" with the following form data
+      | field   | value      |
+      | name    | test       |
+      | status  | available  |
+    Then the response status code should be 404
+    And the response body should contain an error message indicating that the pet was not found
+
+  Scenario: Update pet with empty form data
+    Given the user wants to update the pet with ID 131439890 but sends empty form-encoded data
+    When the user sends a POST request to "/pet/131439890" with empty form-encoded data
+    Then the response status code should be 400
+    And the response body should contain an error message indicating that no data was provided
+
+Feature: Delete an existing pet
+
+  Scenario: Successfully delete an existing pet
+    Given the user wants to delete the pet with ID 143
+    When the user sends a DELETE request to "/pet/143"
+    Then the response status code should be 200
+    And the response body should contain a confirmation message indicating successful deletion
+
+  Scenario: Delete a non-existent pet
+    Given the user wants to delete a pet with a non-existent ID
+    When the user sends a DELETE request to "/pet/999999999"
+    Then the response status code should be 404
+    And the response body should contain an error message indicating that the pet was not found
+
+  Scenario: Delete a pet with invalid ID format
+    Given the user wants to delete a pet with an invalid ID format
+    When the user sends a DELETE request to "/pet/invalid_id"
+    Then the response status code should be 400
+    And the response body should contain an error message indicating that the ID format is invalid
+
+  Scenario: Delete a pet with no ID
+    Given the user wants to delete a pet but does not provide an ID
+    When the user sends a DELETE request to "/pet/"
+    Then the response status code should be 404
+    And the response body should contain an error message indicating that no pet ID was provided
+
+  Scenario: Delete a pet with a valid ID but the server is down
+    Given the user wants to delete a pet with ID 143 but the server is down
+    When the user sends a DELETE request to "/pet/143"
+    Then the response status code should be 500
+    And the response body should contain an error message indicating that the server is unavailable
+
+
+
+
+
+
+
+
+
+
+

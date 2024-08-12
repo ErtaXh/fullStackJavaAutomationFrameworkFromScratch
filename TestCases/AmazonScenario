@@ -1,0 +1,55 @@
+
+Test Case 1 : Add hats for man in shopping cart
+1. Navigate to Amazon's homepage.
+2. In the search bar at the top of the page, search for "hats for men."
+3. From the search results, click the first available hat.
+4. In the hat details page, increase the quantity to 2 using the quantity dropdown.
+5. Click the "Add to Cart" button.
+6. In the confirmation page,  confirm that the hat has been added to the cart successfully.
+7. Open the shopping cart by clicking Go to Cart link.
+9. Verify that the total price and quantity for the men's hat are correct.
+
+Test Case 2: Add hats for women in shoping cart
+
+Precondition Test Case 1
+
+1. In the search bar at the top of the page, search for "hats for women" .
+2.From the search results, click the first available hat.
+3. In the hat details page, click the "Add to Cart" button with the default quantity of 1.
+4. Click the "Add to Cart" button.
+5.Verify that the total price and quantity for both the men's and women's hats are correct.
+
+Test Case 3: Asserting the price update after reducing the quantity
+Precondtion Test Case 2
+
+1.In the cart, change the quantity of the men's hat (from TC 1) from 2 to 1.
+2 .Verify that the total price and quantity update correctly.
+
+
+Explain Changes
+
+Original Scenario Issues
+When I looked at the original scenario, I noticed a few issues:
+
+1. Lack of structure: The steps were just listed out in a straight line, which made it hard to follow, especially with so many steps involved.
+2. Ambiguity: Some instructions, like "Add first hat to Cart with quantity 2," weren’t very clear. I could see how this might lead to confusion—like how exactly to pick the first hat, or whether I should confirm the addition to the cart.
+3. No preconditions or dependencies: The original steps didn’t show if one step depended on another, which is important to know.
+4. Missing verifications: There weren’t any checks to confirm if the actions were successful, and that’s something I always want to include for robust testing.
+
+My Changes and Explanations
+
+Test Case 1: Add hats for men to the shopping cart
+
+1. Clear Separation: I decided to split the scenario into separate test cases, which makes it much easier to follow.
+2. Explicit Actions: Instead of just saying "Add first hat to Cart with quantity 2," I broke it down. I made sure to include steps for selecting the quantity and then clicking "Add to Cart," which removes any guesswork.
+3. Verification Step: I added a step to confirm that the hat was actually added to the cart. This wasn’t in the original, but I think it’s essential to make sure the action was successful.
+
+Test Case 2: Add hats for women to the shopping cart
+1. Precondition Mentioned: I made sure to point out that this test case depends on the previous one. It’s important to know that Test Case 2 can’t run on its own without Test Case 1.
+2. Step Clarity: Just like in the first test case, I made the steps more detailed and clear.
+3. Consolidated Verification: I decided to check the total price and quantity for both the men’s and women’s hats together. It makes sense to verify that the cart is in the correct state all at once.
+
+Test Case 3: Asserting the price update after reducing the quantity
+
+1. Precondition Mentioned: I noted that this test case depends on Test Case 2, which helps keep the sequence clear.
+2. Focused Validation: This test case is all about checking the price and quantity update after I reduce the quantity. By focusing only on this, I can ensure everything is working as expected.

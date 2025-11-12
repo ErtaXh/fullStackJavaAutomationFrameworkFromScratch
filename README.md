@@ -1,8 +1,6 @@
-# Nuvolar QA Engineer Exercises
-
 This repository contains both manual and automation exercises.
 
-## Exercises Structure
+## Structure
 
 1. Find the manual testing exercises's solution in Test Cases folder.
 2. For frontend Automation exercise you can find the analysis of the scenario in Test Cases folder and the scripts in AmazonAutomation folder
